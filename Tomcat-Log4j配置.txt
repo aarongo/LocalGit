@@ -1,0 +1,61 @@
+配置tomcat7.0.53的log4j
+1.在 $CATALINA_HOME/lib目录（一般是Tomcat安装的根目录）下新建一个log4j.properties文件，
+
+内容如下：
+
+仅输出到指定文件
+log4j.rootLogger=INFO,CATALINA
+log4j.appender.CATALINA=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.CATALINA.File=${catalina.base}/logs/catalina-log
+log4j.appender.CATALINA.Append=true
+log4j.appender.CATALINA.Encoding=UTF-8
+log4j.appender.CATALINA.DatePattern='.'yyyy-MM-dd'.log'
+log4j.appender.CATALINA.layout=org.apache.log4j.PatternLayout
+log4j.appender.CATALINA.layout.ConversionPattern=%d [%t] %-5p %c- %m%n
+
+同时输出到文件和控制台
+log4j.rootLogger=INFO,CATALINA,CONSOLE
+log4j.appender.CATALINA=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.CATALINA.File=${catalina.base}/logs/catalina-log
+log4j.appender.CATALINA.Append=true
+log4j.appender.CATALINA.Encoding=UTF-8
+log4j.appender.CATALINA.DatePattern='.'yyyy-MM-dd'.log'
+log4j.appender.CATALINA.layout=org.apache.log4j.PatternLayout
+log4j.appender.CATALINA.layout.ConversionPattern=%d [%t] %-5p %c- %m%n
+log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
+log4j.appender.Threshold=INFO
+log4j.appender.CONSOLE.Target=System.out
+log4j.appender.CONSOLE.Encoding=UTF-8
+log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
+log4j.appender.CONSOLE.layout.ConversionPattern=%d - %c -%-4r [%t] %-5p %c %x - %m%n
+
+2.下载 Log4J (v1.2 or later)
+
+http://archive.apache.org/dist/logging/log4j/1.2.17/ 下载jar包到$CATALINA_HOME/lib目录下
+
+3.下载 tomcat-juli.jar 和 tomcat-juli-adapters.jar
+
+http://mirror.esocc.com/apache/tomcat/tomcat-6/v6.0.37/bin/extras/ 根据Tomcat版本下载
+
+把tomcat-juli-adapters.jar放到$CATALINA_HOME/lib目录下
+把tomcat-juli.jar 放到$CATALINA_HOME/bin目录下，替换原有的文件
+
+4.移除 $CATALINA_HOME/conf/logging.properties 这个文件是Tomcat自带日志记录器的配置文件
+
+5.修改 $CATALINA_HOME/conf/context.xml,添加swallowOutput="true" 如下：
+<Context swallowOutput="true">
+    <!-- Default set of monitored resources -->
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+                                                                                  
+    <!-- Uncomment this to disable session persistence across Tomcat restarts -->
+    <!--
+    <Manager pathname="" />
+    -->
+    <!-- Uncomment this to enable Comet connection tacking (provides events
+         on session expiration as well as webapp lifecycle) -->
+    <!--
+    <Valve className="org.apache.catalina.valves.CometConnectionManagerValve" />
+    -->
+</Context>
+
+6.重启Tomcat，观察Tomcat的启动日志和错误日志是否都输出到我们指定的日志文件中
