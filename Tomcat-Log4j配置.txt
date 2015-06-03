@@ -1,8 +1,6 @@
 配置tomcat7.0.53的log4j
 1.在 $CATALINA_HOME/lib目录（一般是Tomcat安装的根目录）下新建一个log4j.properties文件，
-
 内容如下：
-
 仅输出到指定文件
 log4j.rootLogger=INFO,CATALINA
 log4j.appender.CATALINA=org.apache.log4j.DailyRollingFileAppender
