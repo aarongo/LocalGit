@@ -1,0 +1,14 @@
+源码安装git2.4.2
+1.安装依赖程序
+yum install perl-devel
+(解决 make[1]: *** [perl.mak] Error 2)
+yum install tcl  build-essential tk gettext
+(解决 MSGFMT    po/bg.msg make[1]: *** [po/bg.msg] 错误 127)
+以上安装完后即可编译成功
+2.安装git
+tar xzf git-2.4.2.tar.gz -C /opt/
+cd /opt/git-2.4.2/ && ./configure && make && make install
+###################################################### 
+[root@Lonny ~]# git --version
+git version 2.4.2
+出现以上安装成功
