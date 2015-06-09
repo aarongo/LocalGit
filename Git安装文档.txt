@@ -1,15 +1,230 @@
-源码安装git2.4.2
-1.安装依赖程序
-yum install perl-devel
-(解决 make[1]: *** [perl.mak] Error 2)
-yum install tcl  build-essential tk gettext
-(解决 MSGFMT    po/bg.msg make[1]: *** [po/bg.msg] 错误 127)
-以上安装完后即可编译成功
-2.安装git
-tar xzf git-2.4.2.tar.gz -C /opt/
-cd /opt/git-2.4.2/ && ./configure && make && make install
-###################################################### 
-[root@Lonny ~]# git --version
-git version 2.4.2
-出现以上安装成功
-##后续http
+操作系统:Centos6.4 64位
+Web服务器: apache
+数据库版本:MySQL 5.5.44
+GitLab 7.11.4
+GitLab Shell 2.6.3
+GitLab API V3
+Ruby 2.1.0p0
+Rails 4.1.9
+
+1.更新和添加基本的软件和服务
+	安装EPEL扩展源
+从fedoraproject下载GPG密钥的EPEL存储库在系统上安装它：
+#wget -O /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6 https://www.fedoraproject.org/static/0608B895.txt
+#rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6
+验证安装:
+		rpm -qa gpg*
+	[root@XXX ~]# rpm -qa gpg*
+		gpgme-1.1.8-3.el6.x86_64
+		gpg-pubkey-0608b895-4bd22942
+安装epel-release-6-8.noarch包，在系统上启用EPEL存储库:
+	rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+添加PUIAS计算资源库
+	创建 /etc/yum.repos.d/PUIAS_6_computational.repo 并添加以下几行：
+	[PUIAS_6_computational]
+	name=PUIAS computational Base $releasever - $basearch
+	mirrorlist=http://puias.math.ias.edu/data/puias/computational/$releasever/$basearch/mirrorlist
+	#baseurl=http://puias.math.ias.edu/data/puias/computational/$releasever/$basearch
+	gpgcheck=1
+	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-puias
+下载并安装GPG密钥：
+	# wget -O /etc/pki/rpm-gpg/RPM-GPG-KEY-puias http://springdale.math.ias.edu/data/puias/6/x86_64/os/RPM-GPG-KEY-puias
+	# rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-puias
+验证密钥是否成功安装：
+	[root@xxx ~]# rpm -qa gpg*
+		gpgme-1.1.8-3.el6.x86_64
+		gpg-pubkey-0608b895-4bd22942
+		gpg-pubkey-41a40948-4ce19266
+验证EPEL和PUIAS库启用，如下图所示：更改eplo源的base地址
+	见yum repolist.jpg
+安装GitLab所需的工具
+	# yum -y update (此处是否可忽略更新有待测试))
+	# yum -y groupinstall 'Development Tools'
+	# yum -y install vim-enhanced readline readline-devel ncurses-devel gdbm-devel glibc-devel tcl-devel openssl-devel curl-devel expat-devel db4-devel byacc sqlite-devel gcc-c++ libyaml libyaml-devel libffi libffi-devel libxml2 libxml2-devel libxslt libxslt-devel libicu libicu-devel system-config-firewall-tui python-devel redis sudo wget crontabs logwatch logrotate perl-Time-HiRes git
+配置redis:
+	# chkconfig redis on
+	# service redis start
+配置sendmail:
+	# yum -y install sendmail-cf
+	# cd /etc/mail
+	# vi /etc/mail/sendmail.mc
+添加这个SMTP网关主机名
+
+	28行 define(`SMART_HOST', `smtp.163.com')dnl
+然后替换这行：
+	EXPOSED_USER(`root')dnl
+为：
+	dnl EXPOSED_USER(`root')dnl
+启用这些设置：
+	#make && chkconfig sendmail on
+2.Ruby
+	下载并编译:
+		# mkdir /tmp/ruby && cd /tmp/ruby
+		# curl --progress ftp://ftp.ruby-lang.org/pub/ruby/2.1/ruby-2.1.0.tar.gz | tar xz
+		# cd ruby-2.1.0
+		# ./configure --prefix=/usr/local/
+		# make && make install
+注销或者重新登录使$PATH生效.验证Ruby安装:
+	# which ruby
+	/usr/local/bin/ruby
+	# ruby -v
+	ruby 2.1.0p0 (2013-12-25 revision 44422) [x86_64-linux]
+安装 Bundler Gem：(首先更换gem源)
+	gem sources --remove https://rubygems.org/
+	# gem sources -a https://ruby.taobao.org/
+	# gem sources -l
+	#gem install bundler --no-ri --no-rdoc
+3.系统用户
+	创建Git用户:
+		adduser --system --shell /bin/bash --comment 'GitLab' --create-home --home-dir /home/git/ git
+	转发所有邮件:
+	所有的记录被系统集中发送到一个电子邮件地址：
+	# echo adminlogs@example.com > /root/.forward
+	# chown root /root/.forward
+	# chmod 600 /root/.forward
+	# restorecon /root/.forward
+
+	# echo adminlogs@example.com > /home/git/.forward
+	# chown git /home/git/.forward
+	# chmod 600 /home/git/.forward
+	# restorecon /home/git/.forward
+4.Install GitLab Shell
+	GitLab shell 是一个专门为GitLab开发的一个ssh访问与资源库的管理软件
+		su git
+		//克隆Gitlab shell
+		$git clone https://github.com/gitlabhq/gitlab-shell.git
+		$ cd gitlab-shell
+		//切换版本
+		$git checkout v2.6.3
+		$ cp config.yml.example config.yml && vim config.yml
+		更改第9行:
+		"http://localhost:8080/" 为:http://IP:8080/
+		//执行安装
+		./bin/install
+5.数据库
+		进行安装数据库
+		remi源:rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+		安装Mysql:yum --enablerepo=remi list mysql mysql-server
+		版本为:5.5.44
+		启动服务:service mysqld restart
+// 登录到MySQL
+# mysql -u root -p
+// 输入数据库root密码
+// 创建一个给GitLab使用的用户（这里的123456请更改成你自己想要的密码）
+> CREATE USER 'gitlab'@'localhost' IDENTIFIED BY '123456';
+
+// 创建个Gitlab使用的数据库
+> CREATE DATABASE IF NOT EXISTS `gitlabhq_production` DEFAULT CHARACTER SET `utf8` COLLATE `utf8_unicode_ci`;
+
+// 给与Gitlab使用这个数据库所必要的权限
+> GRANT SELECT, LOCK TABLES, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON `gitlabhq_production`.* TO 'gitlab'@'localhost';
+
+//给root赋予远程登录所有管理权等
+> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'aaron@126.com' WITH GRANT OPTION;
+> GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY 'aaron@126.com' WITH GRANT OPTION;
+> FLUSH PRIVILEGES;	
+
+// 退出数据库会话
+> \q
+
+# mysql -u gitlab -p -D gitlabhq_production
+
+// 退出数据库会话
+> \q	
+		
+6.GitLab
+	// 克隆GitLab资源库
+		$ git clone https://github.com/gitlabhq/gitlabhq.git gitlab
+	//进入gitlab目录
+		$ cd /home/git/gitlab
+	//切换版本
+		$ git checkout 7-11-stable
+	进行配置:
+	// 复制GitLab配置例子
+		# cp config/gitlab.yml.example config/gitlab.yml
+
+	// 修改your_domain_name为你阿里云主机为gitlab绑定的域名
+	// 这里"gitlab.latrell.me"是本人gitlab的地址，请替换为你自己的
+		# sed -i 's|gitlab.latrell.me|your_domain_name|g' config/gitlab.yml
+
+	// 确保Gitlab拥有写入 log/ 与 tmp/ 目录的权限
+		# chown -R git log/
+		# chown -R git tmp/
+		# chmod -R u+rwX  log/
+		# chmod -R u+rwX  tmp/
+
+	// 创建satellites目录
+		# mkdir /home/git/gitlab-satellites
+
+	// 创建 sockets/pids 并确保GitLab可以写入他们
+		# mkdir tmp/pids/
+		# mkdir tmp/sockets/
+		# chmod -R u+rwX  tmp/pids/
+		# chmod -R u+rwX  tmp/sockets/
+
+	// 创建 public/uploads 目录，否则备份会失败
+		# mkdir public/uploads
+		# chmod -R u+rwX  public/uploads
+
+	// 拷贝Unicorn的配置例子
+		# cp config/unicorn.rb.example config/unicorn.rb
+
+	// 如果你购买的阿里云配置在32G内存以上，可以更改 worker_processes 为3或更高
+		# vi config/unicorn.rb
+
+	// 配置git用户在Git上的全局配置，通过网络编辑时有用
+	// 按照gitlab.yml里的设置编辑 user.email ，这里的 "latrell.me" 应该是你的域名
+		git config --global user.name "GitLab"
+		git config --global user.email "gitlab@latrell.me"
+		git config --global core.autocrlf input
+配置 GitLab DB 设置
+	// 拷贝MySQL的数据库配置
+		# cp config/database.yml{.mysql,}
+
+	// 修改production部分的用户名密码
+		# vi config/database.yml
+		更改 username: git 为 username: gitlab
+		更改 password: "secure password" 为 password: "123456" (此处为咱们自己设置的用户和密码)
+// 使 config/database.yml 只有git用户是可读的
+		# chmod o-rwx config/database.yml		
+安装 Gems
+		此处首先更改Gemfile 		
+		更改为:source "https://ruby.taobao.org/" (建议)
+		#gem install charlock_holmes --version '0.6.9.4'
+		注:如果报错
+		  error installing charlock_holmes error failed to build gem native extension
+		 解决办法:
+			yum install patch
+		# su git
+		$ cd ~/gitlab
+		$ bundle install --deployment --without development test postgres puma aws  
+		(在执行上条命令的时候按照报错去安装缺失的包即可)app需要的gems进行安装
+	注如果报:mysql.h is missing. please check your installation of mysql and try again.
+		 解决办法:yum --enablerepo=remi install mysql-devel
+初始化数据库并激活高级功能:
+			# su git
+			$ cd ~/gitlab
+			$ bundle exec rake gitlab:setup RAILS_ENV=production
+		运行是报错:ExecJS::RuntimeUnavailable: Could not find a JavaScript runtime. See https://github.com/rails/execjs for a list of available runtimes.
+		解决办法:
+			yum -y install nodejs
+安装初始化脚本
+		下载初始化脚本到 /etc/init.d/gitlab：
+		# wget -O /etc/init.d/gitlab https://raw.github.com/gitlabhq/gitlab-recipes/master/init/sysvinit/centos/gitlab-unicorn
+		# chmod +x /etc/init.d/gitlab
+		# chkconfig --add gitlab
+			使GitLab开机启动：
+		#chkconfig gitlab on
+7. 配置Web服务器
+	使用apache进行代理 参考:https://github.com/lubia/gitlab-recipes/tree/master/install/centos
+	配置完成后启动失败报:
+	(98)Address already in use: make_sock: could not bind to address [::]:443 
+	进行配置 vim /etc/httpd/conf/httpd.conf 
+		#Listen 443 注释此行
+	配置完后启动报错:
+		mkdir /var/log/httpd/logs
+	启动成功进行访问
+	见截图
+	
+		
+		
