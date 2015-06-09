@@ -1,84 +1,84 @@
-²Ù×÷ÏµÍ³:Centos6.4 64Î»
-Web·şÎñÆ÷: apache
-Êı¾İ¿â°æ±¾:MySQL 5.5.44
+æ“ä½œç³»ç»Ÿ:Centos6.4 64ä½
+WebæœåŠ¡å™¨: apache
+æ•°æ®åº“ç‰ˆæœ¬:MySQL 5.5.44
 GitLab 7.11.4
 GitLab Shell 2.6.3
 GitLab API V3
 Ruby 2.1.0p0
 Rails 4.1.9
 
-1.¸üĞÂºÍÌí¼Ó»ù±¾µÄÈí¼şºÍ·şÎñ
-	°²×°EPELÀ©Õ¹Ô´
-´ÓfedoraprojectÏÂÔØGPGÃÜÔ¿µÄEPEL´æ´¢¿âÔÚÏµÍ³ÉÏ°²×°Ëü£º
+1.æ›´æ–°å’Œæ·»åŠ åŸºæœ¬çš„è½¯ä»¶å’ŒæœåŠ¡
+	å®‰è£…EPELæ‰©å±•æº
+ä»fedoraprojectä¸‹è½½GPGå¯†é’¥çš„EPELå­˜å‚¨åº“åœ¨ç³»ç»Ÿä¸Šå®‰è£…å®ƒï¼š
 #wget -O /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6 https://www.fedoraproject.org/static/0608B895.txt
 #rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-6
-ÑéÖ¤°²×°:
+éªŒè¯å®‰è£…:
 		rpm -qa gpg*
 	[root@XXX ~]# rpm -qa gpg*
 		gpgme-1.1.8-3.el6.x86_64
 		gpg-pubkey-0608b895-4bd22942
-°²×°epel-release-6-8.noarch°ü£¬ÔÚÏµÍ³ÉÏÆôÓÃEPEL´æ´¢¿â:
+å®‰è£…epel-release-6-8.noarchåŒ…ï¼Œåœ¨ç³»ç»Ÿä¸Šå¯ç”¨EPELå­˜å‚¨åº“:
 	rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
-Ìí¼ÓPUIAS¼ÆËã×ÊÔ´¿â
-	´´½¨ /etc/yum.repos.d/PUIAS_6_computational.repo ²¢Ìí¼ÓÒÔÏÂ¼¸ĞĞ£º
+æ·»åŠ PUIASè®¡ç®—èµ„æºåº“
+	åˆ›å»º /etc/yum.repos.d/PUIAS_6_computational.repo å¹¶æ·»åŠ ä»¥ä¸‹å‡ è¡Œï¼š
 	[PUIAS_6_computational]
 	name=PUIAS computational Base $releasever - $basearch
 	mirrorlist=http://puias.math.ias.edu/data/puias/computational/$releasever/$basearch/mirrorlist
 	#baseurl=http://puias.math.ias.edu/data/puias/computational/$releasever/$basearch
 	gpgcheck=1
 	gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-puias
-ÏÂÔØ²¢°²×°GPGÃÜÔ¿£º
+ä¸‹è½½å¹¶å®‰è£…GPGå¯†é’¥ï¼š
 	# wget -O /etc/pki/rpm-gpg/RPM-GPG-KEY-puias http://springdale.math.ias.edu/data/puias/6/x86_64/os/RPM-GPG-KEY-puias
 	# rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-puias
-ÑéÖ¤ÃÜÔ¿ÊÇ·ñ³É¹¦°²×°£º
+éªŒè¯å¯†é’¥æ˜¯å¦æˆåŠŸå®‰è£…ï¼š
 	[root@xxx ~]# rpm -qa gpg*
 		gpgme-1.1.8-3.el6.x86_64
 		gpg-pubkey-0608b895-4bd22942
 		gpg-pubkey-41a40948-4ce19266
-ÑéÖ¤EPELºÍPUIAS¿âÆôÓÃ£¬ÈçÏÂÍ¼ËùÊ¾£º¸ü¸ÄeploÔ´µÄbaseµØÖ·
-	¼ûyum repolist.jpg
-°²×°GitLabËùĞèµÄ¹¤¾ß
-	# yum -y update (´Ë´¦ÊÇ·ñ¿ÉºöÂÔ¸üĞÂÓĞ´ı²âÊÔ))
+éªŒè¯EPELå’ŒPUIASåº“å¯ç”¨ï¼Œå¦‚ä¸‹å›¾æ‰€ç¤ºï¼šæ›´æ”¹eploæºçš„baseåœ°å€
+	è§yum repolist.jpg
+å®‰è£…GitLabæ‰€éœ€çš„å·¥å…·
+	# yum -y update (æ­¤å¤„æ˜¯å¦å¯å¿½ç•¥æ›´æ–°æœ‰å¾…æµ‹è¯•))
 	# yum -y groupinstall 'Development Tools'
 	# yum -y install vim-enhanced readline readline-devel ncurses-devel gdbm-devel glibc-devel tcl-devel openssl-devel curl-devel expat-devel db4-devel byacc sqlite-devel gcc-c++ libyaml libyaml-devel libffi libffi-devel libxml2 libxml2-devel libxslt libxslt-devel libicu libicu-devel system-config-firewall-tui python-devel redis sudo wget crontabs logwatch logrotate perl-Time-HiRes git
-ÅäÖÃredis:
+é…ç½®redis:
 	# chkconfig redis on
 	# service redis start
-ÅäÖÃsendmail:
+é…ç½®sendmail:
 	# yum -y install sendmail-cf
 	# cd /etc/mail
 	# vi /etc/mail/sendmail.mc
-Ìí¼ÓÕâ¸öSMTPÍø¹ØÖ÷»úÃû
+æ·»åŠ è¿™ä¸ªSMTPç½‘å…³ä¸»æœºå
 
-	28ĞĞ define(`SMART_HOST', `smtp.163.com')dnl
-È»ºóÌæ»»ÕâĞĞ£º
+	28è¡Œ define(`SMART_HOST', `smtp.163.com')dnl
+ç„¶åæ›¿æ¢è¿™è¡Œï¼š
 	EXPOSED_USER(`root')dnl
-Îª£º
+ä¸ºï¼š
 	dnl EXPOSED_USER(`root')dnl
-ÆôÓÃÕâĞ©ÉèÖÃ£º
+å¯ç”¨è¿™äº›è®¾ç½®ï¼š
 	#make && chkconfig sendmail on
 2.Ruby
-	ÏÂÔØ²¢±àÒë:
+	ä¸‹è½½å¹¶ç¼–è¯‘:
 		# mkdir /tmp/ruby && cd /tmp/ruby
 		# curl --progress ftp://ftp.ruby-lang.org/pub/ruby/2.1/ruby-2.1.0.tar.gz | tar xz
 		# cd ruby-2.1.0
 		# ./configure --prefix=/usr/local/
 		# make && make install
-×¢Ïú»òÕßÖØĞÂµÇÂ¼Ê¹$PATHÉúĞ§.ÑéÖ¤Ruby°²×°:
+æ³¨é”€æˆ–è€…é‡æ–°ç™»å½•ä½¿$PATHç”Ÿæ•ˆ.éªŒè¯Rubyå®‰è£…:
 	# which ruby
 	/usr/local/bin/ruby
 	# ruby -v
 	ruby 2.1.0p0 (2013-12-25 revision 44422) [x86_64-linux]
-°²×° Bundler Gem£º(Ê×ÏÈ¸ü»»gemÔ´)
+å®‰è£… Bundler Gemï¼š(é¦–å…ˆæ›´æ¢gemæº)
 	gem sources --remove https://rubygems.org/
 	# gem sources -a https://ruby.taobao.org/
 	# gem sources -l
 	#gem install bundler --no-ri --no-rdoc
-3.ÏµÍ³ÓÃ»§
-	´´½¨GitÓÃ»§:
+3.ç³»ç»Ÿç”¨æˆ·
+	åˆ›å»ºGitç”¨æˆ·:
 		adduser --system --shell /bin/bash --comment 'GitLab' --create-home --home-dir /home/git/ git
-	×ª·¢ËùÓĞÓÊ¼ş:
-	ËùÓĞµÄ¼ÇÂ¼±»ÏµÍ³¼¯ÖĞ·¢ËÍµ½Ò»¸öµç×ÓÓÊ¼şµØÖ·£º
+	è½¬å‘æ‰€æœ‰é‚®ä»¶:
+	æ‰€æœ‰çš„è®°å½•è¢«ç³»ç»Ÿé›†ä¸­å‘é€åˆ°ä¸€ä¸ªç”µå­é‚®ä»¶åœ°å€ï¼š
 	# echo adminlogs@example.com > /root/.forward
 	# chown root /root/.forward
 	# chmod 600 /root/.forward
@@ -89,142 +89,141 @@ Rails 4.1.9
 	# chmod 600 /home/git/.forward
 	# restorecon /home/git/.forward
 4.Install GitLab Shell
-	GitLab shell ÊÇÒ»¸ö×¨ÃÅÎªGitLab¿ª·¢µÄÒ»¸össh·ÃÎÊÓë×ÊÔ´¿âµÄ¹ÜÀíÈí¼ş
+	GitLab shell æ˜¯ä¸€ä¸ªä¸“é—¨ä¸ºGitLabå¼€å‘çš„ä¸€ä¸ªsshè®¿é—®ä¸èµ„æºåº“çš„ç®¡ç†è½¯ä»¶
 		su git
-		//¿ËÂ¡Gitlab shell
+		//å…‹éš†Gitlab shell
 		$git clone https://github.com/gitlabhq/gitlab-shell.git
 		$ cd gitlab-shell
-		//ÇĞ»»°æ±¾
+		//åˆ‡æ¢ç‰ˆæœ¬
 		$git checkout v2.6.3
 		$ cp config.yml.example config.yml && vim config.yml
-		¸ü¸ÄµÚ9ĞĞ:
-		"http://localhost:8080/" Îª:http://IP:8080/
-		//Ö´ĞĞ°²×°
+		æ›´æ”¹ç¬¬9è¡Œ:
+		"http://localhost:8080/" ä¸º:http://IP:8080/
+		//æ‰§è¡Œå®‰è£…
 		./bin/install
-5.Êı¾İ¿â
-		½øĞĞ°²×°Êı¾İ¿â
-		remiÔ´:rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
-		°²×°Mysql:yum --enablerepo=remi list mysql mysql-server
-		°æ±¾Îª:5.5.44
-		Æô¶¯·şÎñ:service mysqld restart
-// µÇÂ¼µ½MySQL
+5.æ•°æ®åº“
+		è¿›è¡Œå®‰è£…æ•°æ®åº“
+		remiæº:rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+		å®‰è£…Mysql:yum --enablerepo=remi list mysql mysql-server
+		ç‰ˆæœ¬ä¸º:5.5.44
+		å¯åŠ¨æœåŠ¡:service mysqld restart
+// ç™»å½•åˆ°MySQL
 # mysql -u root -p
-// ÊäÈëÊı¾İ¿ârootÃÜÂë
-// ´´½¨Ò»¸ö¸øGitLabÊ¹ÓÃµÄÓÃ»§£¨ÕâÀïµÄ123456Çë¸ü¸Ä³ÉÄã×Ô¼ºÏëÒªµÄÃÜÂë£©
+// è¾“å…¥æ•°æ®åº“rootå¯†ç 
+// åˆ›å»ºä¸€ä¸ªç»™GitLabä½¿ç”¨çš„ç”¨æˆ·ï¼ˆè¿™é‡Œçš„123456è¯·æ›´æ”¹æˆä½ è‡ªå·±æƒ³è¦çš„å¯†ç ï¼‰
 > CREATE USER 'gitlab'@'localhost' IDENTIFIED BY '123456';
 
-// ´´½¨¸öGitlabÊ¹ÓÃµÄÊı¾İ¿â
+// åˆ›å»ºä¸ªGitlabä½¿ç”¨çš„æ•°æ®åº“
 > CREATE DATABASE IF NOT EXISTS `gitlabhq_production` DEFAULT CHARACTER SET `utf8` COLLATE `utf8_unicode_ci`;
 
-// ¸øÓëGitlabÊ¹ÓÃÕâ¸öÊı¾İ¿âËù±ØÒªµÄÈ¨ÏŞ
+// ç»™ä¸Gitlabä½¿ç”¨è¿™ä¸ªæ•°æ®åº“æ‰€å¿…è¦çš„æƒé™
 > GRANT SELECT, LOCK TABLES, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER ON `gitlabhq_production`.* TO 'gitlab'@'localhost';
 
-//¸øroot¸³ÓèÔ¶³ÌµÇÂ¼ËùÓĞ¹ÜÀíÈ¨µÈ
+//ç»™rootèµ‹äºˆè¿œç¨‹ç™»å½•æ‰€æœ‰ç®¡ç†æƒç­‰
 > GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'aaron@126.com' WITH GRANT OPTION;
 > GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY 'aaron@126.com' WITH GRANT OPTION;
 > FLUSH PRIVILEGES;	
 
-// ÍË³öÊı¾İ¿â»á»°
+// é€€å‡ºæ•°æ®åº“ä¼šè¯
 > \q
 
 # mysql -u gitlab -p -D gitlabhq_production
 
-// ÍË³öÊı¾İ¿â»á»°
+// é€€å‡ºæ•°æ®åº“ä¼šè¯
 > \q	
 		
 6.GitLab
-	// ¿ËÂ¡GitLab×ÊÔ´¿â
+	// å…‹éš†GitLabèµ„æºåº“
 		$ git clone https://github.com/gitlabhq/gitlabhq.git gitlab
-	//½øÈëgitlabÄ¿Â¼
+	//è¿›å…¥gitlabç›®å½•
 		$ cd /home/git/gitlab
-	//ÇĞ»»°æ±¾
+	//åˆ‡æ¢ç‰ˆæœ¬
 		$ git checkout 7-11-stable
-	½øĞĞÅäÖÃ:
-	// ¸´ÖÆGitLabÅäÖÃÀı×Ó
+	è¿›è¡Œé…ç½®:
+	// å¤åˆ¶GitLabé…ç½®ä¾‹å­
 		# cp config/gitlab.yml.example config/gitlab.yml
 
-	// ĞŞ¸Äyour_domain_nameÎªÄã°¢ÀïÔÆÖ÷»úÎªgitlab°ó¶¨µÄÓòÃû
-	// ÕâÀï"gitlab.latrell.me"ÊÇ±¾ÈËgitlabµÄµØÖ·£¬ÇëÌæ»»ÎªÄã×Ô¼ºµÄ
-		# sed -i 's|gitlab.latrell.me|your_domain_name|g' config/gitlab.yml
+	// ä¿®æ”¹your_domain_nameä¸ºæœ¬æœºIPå³å¯
+	// è¿™é‡Œ"host"æ˜¯æœ¬äººgitlabçš„åœ°å€ï¼Œè¯·æ›¿æ¢ä¸ºä½ è‡ªå·±çš„
 
-	// È·±£GitlabÓµÓĞĞ´Èë log/ Óë tmp/ Ä¿Â¼µÄÈ¨ÏŞ
+	// ç¡®ä¿Gitlabæ‹¥æœ‰å†™å…¥ log/ ä¸ tmp/ ç›®å½•çš„æƒé™
 		# chown -R git log/
 		# chown -R git tmp/
 		# chmod -R u+rwX  log/
 		# chmod -R u+rwX  tmp/
 
-	// ´´½¨satellitesÄ¿Â¼
+	// åˆ›å»ºsatellitesç›®å½•
 		# mkdir /home/git/gitlab-satellites
 
-	// ´´½¨ sockets/pids ²¢È·±£GitLab¿ÉÒÔĞ´ÈëËûÃÇ
+	// åˆ›å»º sockets/pids å¹¶ç¡®ä¿GitLabå¯ä»¥å†™å…¥ä»–ä»¬
 		# mkdir tmp/pids/
 		# mkdir tmp/sockets/
 		# chmod -R u+rwX  tmp/pids/
 		# chmod -R u+rwX  tmp/sockets/
 
-	// ´´½¨ public/uploads Ä¿Â¼£¬·ñÔò±¸·İ»áÊ§°Ü
+	// åˆ›å»º public/uploads ç›®å½•ï¼Œå¦åˆ™å¤‡ä»½ä¼šå¤±è´¥
 		# mkdir public/uploads
 		# chmod -R u+rwX  public/uploads
 
-	// ¿½±´UnicornµÄÅäÖÃÀı×Ó
+	// æ‹·è´Unicornçš„é…ç½®ä¾‹å­
 		# cp config/unicorn.rb.example config/unicorn.rb
 
-	// Èç¹ûÄã¹ºÂòµÄ°¢ÀïÔÆÅäÖÃÔÚ32GÄÚ´æÒÔÉÏ£¬¿ÉÒÔ¸ü¸Ä worker_processes Îª3»ò¸ü¸ß
+	// å¦‚æœä½ è´­ä¹°çš„é˜¿é‡Œäº‘é…ç½®åœ¨32Gå†…å­˜ä»¥ä¸Šï¼Œå¯ä»¥æ›´æ”¹ worker_processes ä¸º3æˆ–æ›´é«˜
 		# vi config/unicorn.rb
 
-	// ÅäÖÃgitÓÃ»§ÔÚGitÉÏµÄÈ«¾ÖÅäÖÃ£¬Í¨¹ıÍøÂç±à¼­Ê±ÓĞÓÃ
-	// °´ÕÕgitlab.ymlÀïµÄÉèÖÃ±à¼­ user.email £¬ÕâÀïµÄ "latrell.me" Ó¦¸ÃÊÇÄãµÄÓòÃû
+	// é…ç½®gitç”¨æˆ·åœ¨Gitä¸Šçš„å…¨å±€é…ç½®ï¼Œé€šè¿‡ç½‘ç»œç¼–è¾‘æ—¶æœ‰ç”¨
+	// æŒ‰ç…§gitlab.ymlé‡Œçš„è®¾ç½®ç¼–è¾‘ user.email ï¼Œè¿™é‡Œçš„ "latrell.me" åº”è¯¥æ˜¯ä½ çš„åŸŸå
 		git config --global user.name "GitLab"
 		git config --global user.email "gitlab@latrell.me"
 		git config --global core.autocrlf input
-ÅäÖÃ GitLab DB ÉèÖÃ
-	// ¿½±´MySQLµÄÊı¾İ¿âÅäÖÃ
+é…ç½® GitLab DB è®¾ç½®
+	// æ‹·è´MySQLçš„æ•°æ®åº“é…ç½®
 		# cp config/database.yml{.mysql,}
 
-	// ĞŞ¸Äproduction²¿·ÖµÄÓÃ»§ÃûÃÜÂë
+	// ä¿®æ”¹productionéƒ¨åˆ†çš„ç”¨æˆ·åå¯†ç 
 		# vi config/database.yml
-		¸ü¸Ä username: git Îª username: gitlab
-		¸ü¸Ä password: "secure password" Îª password: "123456" (´Ë´¦ÎªÔÛÃÇ×Ô¼ºÉèÖÃµÄÓÃ»§ºÍÃÜÂë)
-// Ê¹ config/database.yml Ö»ÓĞgitÓÃ»§ÊÇ¿É¶ÁµÄ
+		æ›´æ”¹ username: git ä¸º username: gitlab
+		æ›´æ”¹ password: "secure password" ä¸º password: "123456" (æ­¤å¤„ä¸ºå’±ä»¬è‡ªå·±è®¾ç½®çš„ç”¨æˆ·å’Œå¯†ç )
+// ä½¿ config/database.yml åªæœ‰gitç”¨æˆ·æ˜¯å¯è¯»çš„
 		# chmod o-rwx config/database.yml		
-°²×° Gems
-		´Ë´¦Ê×ÏÈ¸ü¸ÄGemfile 		
-		¸ü¸ÄÎª:source "https://ruby.taobao.org/" (½¨Òé)
+å®‰è£… Gems
+		æ­¤å¤„é¦–å…ˆæ›´æ”¹Gemfile 		
+		æ›´æ”¹ä¸º:source "https://ruby.taobao.org/" (å»ºè®®)
 		#gem install charlock_holmes --version '0.6.9.4'
-		×¢:Èç¹û±¨´í
+		æ³¨:å¦‚æœæŠ¥é”™
 		  error installing charlock_holmes error failed to build gem native extension
-		 ½â¾ö°ì·¨:
+		 è§£å†³åŠæ³•:
 			yum install patch
 		# su git
 		$ cd ~/gitlab
 		$ bundle install --deployment --without development test postgres puma aws  
-		(ÔÚÖ´ĞĞÉÏÌõÃüÁîµÄÊ±ºò°´ÕÕ±¨´íÈ¥°²×°È±Ê§µÄ°ü¼´¿É)appĞèÒªµÄgems½øĞĞ°²×°
-	×¢Èç¹û±¨:mysql.h is missing. please check your installation of mysql and try again.
-		 ½â¾ö°ì·¨:yum --enablerepo=remi install mysql-devel
-³õÊ¼»¯Êı¾İ¿â²¢¼¤»î¸ß¼¶¹¦ÄÜ:
+		(åœ¨æ‰§è¡Œä¸Šæ¡å‘½ä»¤çš„æ—¶å€™æŒ‰ç…§æŠ¥é”™å»å®‰è£…ç¼ºå¤±çš„åŒ…å³å¯)appéœ€è¦çš„gemsè¿›è¡Œå®‰è£…
+	æ³¨å¦‚æœæŠ¥:mysql.h is missing. please check your installation of mysql and try again.
+		 è§£å†³åŠæ³•:yum --enablerepo=remi install mysql-devel
+åˆå§‹åŒ–æ•°æ®åº“å¹¶æ¿€æ´»é«˜çº§åŠŸèƒ½:
 			# su git
 			$ cd ~/gitlab
 			$ bundle exec rake gitlab:setup RAILS_ENV=production
-		ÔËĞĞÊÇ±¨´í:ExecJS::RuntimeUnavailable: Could not find a JavaScript runtime. See https://github.com/rails/execjs for a list of available runtimes.
-		½â¾ö°ì·¨:
+		è¿è¡Œæ˜¯æŠ¥é”™:ExecJS::RuntimeUnavailable: Could not find a JavaScript runtime. See https://github.com/rails/execjs for a list of available runtimes.
+		è§£å†³åŠæ³•:
 			yum -y install nodejs
-°²×°³õÊ¼»¯½Å±¾
-		ÏÂÔØ³õÊ¼»¯½Å±¾µ½ /etc/init.d/gitlab£º
+å®‰è£…åˆå§‹åŒ–è„šæœ¬
+		ä¸‹è½½åˆå§‹åŒ–è„šæœ¬åˆ° /etc/init.d/gitlabï¼š
 		# wget -O /etc/init.d/gitlab https://raw.github.com/gitlabhq/gitlab-recipes/master/init/sysvinit/centos/gitlab-unicorn
 		# chmod +x /etc/init.d/gitlab
 		# chkconfig --add gitlab
-			Ê¹GitLab¿ª»úÆô¶¯£º
+			ä½¿GitLabå¼€æœºå¯åŠ¨ï¼š
 		#chkconfig gitlab on
-7. ÅäÖÃWeb·şÎñÆ÷
-	Ê¹ÓÃapache½øĞĞ´úÀí ²Î¿¼:https://github.com/lubia/gitlab-recipes/tree/master/install/centos
-	ÅäÖÃÍê³ÉºóÆô¶¯Ê§°Ü±¨:
+7. é…ç½®WebæœåŠ¡å™¨
+	ä½¿ç”¨apacheè¿›è¡Œä»£ç† å‚è€ƒ:https://github.com/lubia/gitlab-recipes/tree/master/install/centos
+	é…ç½®å®Œæˆåå¯åŠ¨å¤±è´¥æŠ¥:
 	(98)Address already in use: make_sock: could not bind to address [::]:443 
-	½øĞĞÅäÖÃ vim /etc/httpd/conf/httpd.conf 
-		#Listen 443 ×¢ÊÍ´ËĞĞ
-	ÅäÖÃÍêºóÆô¶¯±¨´í:
+	è¿›è¡Œé…ç½® vim /etc/httpd/conf/httpd.conf 
+		#Listen 443 æ³¨é‡Šæ­¤è¡Œ
+	é…ç½®å®Œåå¯åŠ¨æŠ¥é”™:
 		mkdir /var/log/httpd/logs
-	Æô¶¯³É¹¦½øĞĞ·ÃÎÊ
-	¼û½ØÍ¼
+	å¯åŠ¨æˆåŠŸè¿›è¡Œè®¿é—®
+	è§æˆªå›¾
 	
 		
 		
