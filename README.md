@@ -11,4 +11,12 @@
 ##Start the instance
     service gitlab start|restart|status
     service httpd start|restart|status
+###Screenshots during installation
+        bundle Install Success
 ![](https://raw.githubusercontent.com/aarongo/LocalGit/InstallationDocument/images/bundle-install.jpg)
+        gitlab Install Error
+![](https://github.com/aarongo/LocalGit/blob/InstallationDocument/images/gitlab-install-bundler-error.jpg)
+        yum repolist Success
+![](https://github.com/aarongo/LocalGit/blob/InstallationDocument/images/yum%20repolist.jpg)
+        gitlab and Webserver Install Success
+![](https://github.com/aarongo/LocalGit/blob/InstallationDocument/images/%E6%89%80%E6%9C%89%E6%9C%8D%E5%8A%A1%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F%E8%AE%BF%E9%97%AE%E6%88%AA%E5%9B%BE.jpg)
