@@ -11,3 +11,4 @@
 ##Start the instance
     service gitlab start|restart|status
     service httpd start|restart|status
+![](https://github.com/aarongo/LocalGit/blob/InstallationDocument/gitlab-install-bundler-error.jpg)
