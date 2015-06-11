@@ -1,0 +1,127 @@
+Mysql 5.5.39安装
+	1.安装cmake
+		./configure
+		sudo make
+		sudo make install
+	2.安装mysql
+		mkdir /software/data
+		mkdir /software/mysql
+		(解决报错Library mysqlclient depends on OSLIBS -lpthread;m;rt;dl
+					Configuring incomplete, errors occurred! 办法)
+	  安装依赖包:
+				yum -y install ncurses  ncurses-devel  openssl openssl-devel zlib bison
+	  编译选项:(编译安装过的cmake需要绝对路径)
+	 /usr/local/bin/cmake -DCMAKE_INSTALL_PREFIX=/install/mysql -DMYSQL_DATADIR=/install/data/mysql-data -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_unicode_ci -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DDEFAULT_COLLATION=utf8_general_ci -DENABLE_DOWNLOADS=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_DEBUG=0
+		安装mysql5.5.39
+			make && make install
+	3.初始数据库
+		cd /software/mysql/scripts
+		sudo ./mysql_install_db --user=mysql --basedir=/install/mysql --datadir=/install/data/mysql-data(注意此处的权限)
+	4.启动Mysql5.5.39/配置文件 (使用My.cnf)
+		更改配置文件:
+					sudo cp support-files/my-medium.cnf /etc/my.cnf
+		[mysqld]下加入一行：lower_case_table_names=1 (不区分大小写)
+		在[mysqld]中增加datadir=/data/mysql 与innodb-file-per-table=1(指定数据库存放目录,开启innodb)
+	Start:
+		1.加入系统命令
+				sudo cd /software/mysql
+				sudo cp support-files/mysql.server /etc/init.d/mysqld 
+				sudo /etc/init.d/mysqld restart|start|stop	
+		2.连接测试
+				./mysql -uroot -p
+				mysql> show databases;
+						+--------------------+
+						| Database           |
+						+--------------------+
+						| information_schema |
+						| mysql              |
+						| performance_schema |
+						| test               |
+						+--------------------+
+						4 rows in set (0.00 sec)
+
+						mysql> 
+	5.更改数据库权限
+			GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '' WITH GRANT OPTION;
+			GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '' WITH GRANT OPTION;
+			FLUSH PRIVILEGES;
+msyql Replication
+	msyql master>grant replication slave,reload,super ON *.* TO slave@192.168.31.200 identified by 'unixhot';
+	
+	cannot allocate the memory for the buffer pool (报错)
+	解决报错
+	innodb_buffer_pool_size=200M
+	key_buffer=120M
+	
+###my.cnf
+	# The following options will be passed to all MySQL clients
+[client]
+port		= 3306
+socket		= /tmp/mysqld.sock
+
+# The MySQL server
+[mysqld]
+port		= 3306
+socket		= /tmp/mysqld.sock
+
+log-error       = mysql_err.log
+basedir         = /install/mysql
+datadir         = /install/data
+
+skip-external-locking
+skip-name-resolve
+lower_case_table_names=1
+max_allowed_packet = 16M
+key_buffer_size = 64M
+join_buffer_size= 64M
+table_open_cache = 1536
+tmp_table_size = 256M
+sort_buffer_size = 128M
+read_buffer_size = 128M
+read_rnd_buffer_size = 64M
+myisam_sort_buffer_size = 64M
+thread_cache_size = 512
+query_cache_size= 128M
+thread_concurrency = 8
+max_connections = 2000
+
+innodb_buffer_pool_size = 8192M (根据系统实际内存进行设置)
+lower_case_table_names = 1
+log_bin_trust_function_creators = 1
+
+
+default-storage-engine=InnoDB
+innodb-file-per-table=1
+
+character_set_server=utf8
+
+#log_slow_queries = mysql-slow.log
+#slow-query-log
+slow-query-log-file = mysql-slow.log
+long_query_time = 1
+
+
+log-bin=mysql-bin
+binlog_format=mixed
+server-id	= 1 (第二个节点加1)
+
+[mysqldump]
+quick
+max_allowed_packet = 16M
+
+[mysql]
+no-auto-rehash
+prompt=(\\u@\\h--\\p) [\\d]>\\_
+
+[myisamchk]
+key_buffer_size = 32M (此处注意根据系统实际内存)
+sort_buffer_size = 32M
+read_buffer = 2M
+write_buffer = 2M
+
+[mysqlhotcopy]
+interactive-timeout
+
+log_slave_updates = 1
+replicate-ignore-db = mysql
+		
