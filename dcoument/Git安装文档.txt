@@ -79,15 +79,9 @@ Rails 4.1.9
 		adduser --system --shell /bin/bash --comment 'GitLab' --create-home --home-dir /home/git/ git
 	转发所有邮件:
 	所有的记录被系统集中发送到一个电子邮件地址：
-	# echo adminlogs@example.com > /root/.forward
-	# chown root /root/.forward
-	# chmod 600 /root/.forward
-	# restorecon /root/.forward
+	# echo aaron@126.com > /root/.forward && chown root /root/.forward && chmod 600 /root/.forward && restorecon /root/.forward
 
-	# echo adminlogs@example.com > /home/git/.forward
-	# chown git /home/git/.forward
-	# chmod 600 /home/git/.forward
-	# restorecon /home/git/.forward
+	# echo aaron@126.com > /home/git/.forward && chown git /home/git/.forward &&  chmod 600 /home/git/.forward && restorecon /home/git/.forward
 4.Install GitLab Shell
 	GitLab shell 是一个专门为GitLab开发的一个ssh访问与资源库的管理软件
 		su git
@@ -104,7 +98,8 @@ Rails 4.1.9
 5.数据库
 		进行安装数据库
 		remi源:rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
-		安装Mysql:yum --enablerepo=remi list mysql mysql-server
+		查看Mysql:yum --enablerepo=remi list mysql mysql-server mysql-devel
+		安装：yum --enablerepo=remi install  mysql mysql-server mysql-devel -y
 		版本为:5.5.44
 		启动服务:service mysqld restart
 // 登录到MySQL
@@ -147,10 +142,7 @@ Rails 4.1.9
 	// 这里"host"是本人gitlab的地址，请替换为你自己的
 
 	// 确保Gitlab拥有写入 log/ 与 tmp/ 目录的权限
-		# chown -R git log/
-		# chown -R git tmp/
-		# chmod -R u+rwX  log/
-		# chmod -R u+rwX  tmp/
+		# chown -R git log/ && chown -R git tmp/ && chmod -R u+rwX  log/ && chmod -R u+rwX  tmp/
 
 	// 创建satellites目录
 		# mkdir /home/git/gitlab-satellites
@@ -225,5 +217,7 @@ Rails 4.1.9
 	启动成功进行访问
 	见截图
 	
-		
+service httpd restart
+service redis restart
+service gitlab restart	
 		
