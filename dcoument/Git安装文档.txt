@@ -104,7 +104,8 @@ Rails 4.1.9
 5.数据库
 		进行安装数据库
 		remi源:rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
-		安装Mysql:yum --enablerepo=remi list mysql mysql-server
+		查看Mysql:yum --enablerepo=remi list mysql mysql-server mysql-devel
+		安装：yum --enablerepo=remi install  mysql mysql-server mysql-devel -y
 		版本为:5.5.44
 		启动服务:service mysqld restart
 // 登录到MySQL
