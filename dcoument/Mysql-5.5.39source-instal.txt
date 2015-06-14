@@ -114,7 +114,7 @@ no-auto-rehash
 prompt=(\\u@\\h--\\p) [\\d]>\\_
 
 [myisamchk]
-key_buffer_size = 32M (此处注意根据系统实际内存)
+key_buffer_size = 32M #(此处注意根据系统实际内存)
 sort_buffer_size = 32M
 read_buffer = 2M
 write_buffer = 2M
