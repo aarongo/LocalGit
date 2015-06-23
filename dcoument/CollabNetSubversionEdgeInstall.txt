@@ -1,0 +1,29 @@
+一.在安装配置CollabNetSubversionEdge之前需要你的Linux系统中已经安装好了jdk1.6以上，python2.4-2.6之间的版本
+二.安装CollabNetSubversionEdge步骤如下:
+	(1).以root权限执行建立svn用户组和成员svnuser，并为svnsuer设置密码:
+		#groupadd svn
+		#useradd -g svn svnuser
+		#passwd svnuser
+	(2).赋予svnuser用户sudo权限，以root权限执行:
+		#vim /etc/sudoers
+	(3).在## Allow root to run any commands anywhere
+		root    ALL=(ALL)       ALL
+		svnuser ALL=(ALL)       ALL
+	(4).创建存放CollabNetSubversionEdge安装文件的目录或者直接安装到用户目录下:
+		# mkdir /home/subversion
+	(5).把下载完成的CollabNetSubversionEdgez上传到你的Linux服务器进行传送
+		cp CollabNetSubversionEdge /home/subversion
+	(6).解压缩CollabNetSubversionEdge文件：
+		tar -zxf CollabNetSubversionEdgeXXX.tar.gz
+	(8).配置csvn使用1-1023端口的权限：
+		chown root:svn /home/subversion/csvn/lib/httpd_bind/httpd_bind　　#root:svnuser的svnuser更换成你的用户
+		chmod u+s /home/subversion/csvn/lib/httpd_bind/httpd_bind
+	(9).配置开机启动:
+		cd /home/subversion/csvn
+		sudo bin/csvn-httpd install     #svn服务端
+		sudo -E bin/csvn install           #web页面
+	(10).启动Subversion edge
+		cd csvn/bin/
+		sh csvn start　　#启动
+		#如果使用start启动失败，可以使用下面的命令
+		sh csvn console　　#此命令会在控制台输出启动日志，便于确定是什么错误导致启动失败

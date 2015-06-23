@@ -42,8 +42,8 @@ Mysql 5.5.39安装
 
 						mysql> 
 	5.更改数据库权限
-			GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '' WITH GRANT OPTION;
-			GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '' WITH GRANT OPTION;
+			GRANT ALL PRIVILEGES ON *.* TO 'crowd'@'%' IDENTIFIED BY 'crowd' WITH GRANT OPTION;
+			GRANT ALL PRIVILEGES ON *.* TO 'crowd'@'localhost' IDENTIFIED BY 'crowd' WITH GRANT OPTION;
 			FLUSH PRIVILEGES;
 msyql Replication
 	msyql master>grant replication slave,reload,super ON *.* TO slave@192.168.31.200 identified by 'unixhot';
