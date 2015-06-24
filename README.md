@@ -26,5 +26,6 @@
 ##Start the instance
     /home/subversion/csvn/bin/csvn start|stop|restart
 ##start Success
-
+![](https://github.com/aarongo/LocalGit/blob/InstallationDocument/images/StartCollabNetSuccess.png)
 ##Access Method
+![](https://github.com/aarongo/LocalGit/blob/InstallationDocument/images/AccessMethod.png)
