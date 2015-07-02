@@ -1,33 +1,33 @@
-Mysql 5.5.39°²×°
-	1.°²×°cmake
+Mysql 5.5.39å®‰è£…
+	1.å®‰è£…cmake
 		./configure
 		sudo make
 		sudo make install
-	2.°²×°mysql
+	2.å®‰è£…mysql
 		mkdir /software/data
 		mkdir /software/mysql
-		(½â¾ö±¨´íLibrary mysqlclient depends on OSLIBS -lpthread;m;rt;dl
-					Configuring incomplete, errors occurred! °ì·¨)
-	  °²×°ÒÀÀµ°ü:
+		(è§£å†³æŠ¥é”™Library mysqlclient depends on OSLIBS -lpthread;m;rt;dl
+					Configuring incomplete, errors occurred! åŠæ³•)
+	  å®‰è£…ä¾èµ–åŒ…:
 				yum -y install ncurses  ncurses-devel  openssl openssl-devel zlib bison
-	  ±àÒëÑ¡Ïî:(±àÒë°²×°¹ıµÄcmakeĞèÒª¾ø¶ÔÂ·¾¶)
-	 /usr/local/bin/cmake -DCMAKE_INSTALL_PREFIX=/install/mysql -DMYSQL_DATADIR=/install/data -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_unicode_ci -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DDEFAULT_COLLATION=utf8_general_ci -DENABLE_DOWNLOADS=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_DEBUG=0
-		°²×°mysql5.5.39
+	  ç¼–è¯‘é€‰é¡¹:(ç¼–è¯‘å®‰è£…è¿‡çš„cmakeéœ€è¦ç»å¯¹è·¯å¾„)
+	 /usr/local/bin/cmake -DCMAKE_INSTALL_PREFIX=/software/mysql -DMYSQL_DATADIR=/software/data -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_unicode_ci -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1 -DDEFAULT_COLLATION=utf8_general_ci -DENABLE_DOWNLOADS=1 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_ARCHIVE_STORAGE_ENGINE=1 -DWITH_BLACKHOLE_STORAGE_ENGINE=1 -DWITH_DEBUG=0
+		å®‰è£…mysql5.5.39
 			make && make install
-	3.³õÊ¼Êı¾İ¿â
+	3.åˆå§‹æ•°æ®åº“
 		cd /software/mysql/scripts
-		sudo ./mysql_install_db --user=mysql --basedir=/install/mysql --datadir=/install/data/mysql-data(×¢Òâ´Ë´¦µÄÈ¨ÏŞ)
-	4.Æô¶¯Mysql5.5.39/ÅäÖÃÎÄ¼ş (Ê¹ÓÃMy.cnf)
-		¸ü¸ÄÅäÖÃÎÄ¼ş:
+		sudo ./mysql_install_db --user=mysql --basedir=/software/mysql --datadir=/software/data (æ³¨æ„æ­¤å¤„çš„æƒé™)
+	4.å¯åŠ¨Mysql5.5.39/é…ç½®æ–‡ä»¶ (ä½¿ç”¨My.cnf)
+		æ›´æ”¹é…ç½®æ–‡ä»¶:
 					sudo cp support-files/my-medium.cnf /etc/my.cnf
-		[mysqld]ÏÂ¼ÓÈëÒ»ĞĞ£ºlower_case_table_names=1 (²»Çø·Ö´óĞ¡Ğ´)
-		ÔÚ[mysqld]ÖĞÔö¼Ódatadir=/data/mysql Óëinnodb-file-per-table=1(Ö¸¶¨Êı¾İ¿â´æ·ÅÄ¿Â¼,¿ªÆôinnodb)
+		[mysqld]ä¸‹åŠ å…¥ä¸€è¡Œï¼šlower_case_table_names=1 (ä¸åŒºåˆ†å¤§å°å†™)
+		åœ¨[mysqld]ä¸­å¢åŠ datadir=/data/mysql ä¸innodb-file-per-table=1(æŒ‡å®šæ•°æ®åº“å­˜æ”¾ç›®å½•,å¼€å¯innodb)
 	Start:
-		1.¼ÓÈëÏµÍ³ÃüÁî
+		1.åŠ å…¥ç³»ç»Ÿå‘½ä»¤
 				sudo cd /software/mysql
 				sudo cp support-files/mysql.server /etc/init.d/mysqld 
 				sudo /etc/init.d/mysqld restart|start|stop	
-		2.Á¬½Ó²âÊÔ
+		2.è¿æ¥æµ‹è¯•
 				./mysql -uroot -p
 				mysql> show databases;
 						+--------------------+
@@ -41,15 +41,15 @@ Mysql 5.5.39°²×°
 						4 rows in set (0.00 sec)
 
 						mysql> 
-	5.¸ü¸ÄÊı¾İ¿âÈ¨ÏŞ
-			GRANT ALL PRIVILEGES ON *.* TO 'crowd'@'%' IDENTIFIED BY 'crowd' WITH GRANT OPTION;
-			GRANT ALL PRIVILEGES ON *.* TO 'crowd'@'localhost' IDENTIFIED BY 'crowd' WITH GRANT OPTION;
+	5.æ›´æ”¹æ•°æ®åº“æƒé™
+			GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'comall2014' WITH GRANT OPTION;
+			GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY 'comall2014' WITH GRANT OPTION;
 			FLUSH PRIVILEGES;
 msyql Replication
 	msyql master>grant replication slave,reload,super ON *.* TO slave@192.168.31.200 identified by 'unixhot';
 	
-	cannot allocate the memory for the buffer pool (±¨´í)
-	½â¾ö±¨´í
+	cannot allocate the memory for the buffer pool (æŠ¥é”™)
+	è§£å†³æŠ¥é”™
 	innodb_buffer_pool_size=200M
 	key_buffer=120M
 	
@@ -85,7 +85,7 @@ query_cache_size= 128M
 thread_concurrency = 8
 max_connections = 2000
 
-innodb_buffer_pool_size = 8192M (¸ù¾İÏµÍ³Êµ¼ÊÄÚ´æ½øĞĞÉèÖÃ)
+innodb_buffer_pool_size = 8192M (æ ¹æ®ç³»ç»Ÿå®é™…å†…å­˜è¿›è¡Œè®¾ç½®)
 lower_case_table_names = 1
 log_bin_trust_function_creators = 1
 
@@ -103,7 +103,7 @@ long_query_time = 1
 
 log-bin=mysql-bin
 binlog_format=mixed
-server-id	= 1 (µÚ¶ş¸ö½Úµã¼Ó1)
+server-id	= 1 (ç¬¬äºŒä¸ªèŠ‚ç‚¹åŠ 1)
 
 [mysqldump]
 quick
@@ -114,7 +114,7 @@ no-auto-rehash
 prompt=(\\u@\\h--\\p) [\\d]>\\_
 
 [myisamchk]
-key_buffer_size = 32M #(´Ë´¦×¢Òâ¸ù¾İÏµÍ³Êµ¼ÊÄÚ´æ)
+key_buffer_size = 32M #(æ­¤å¤„æ³¨æ„æ ¹æ®ç³»ç»Ÿå®é™…å†…å­˜)
 sort_buffer_size = 32M
 read_buffer = 2M
 write_buffer = 2M
