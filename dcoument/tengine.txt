@@ -1,0 +1,88 @@
+tengine安装
+1、基础软件安装：
+	yum install gcc gcc-c++ autoconf automake
+	源码安装：jemalloc-3.6.0.tar.bz2 openssl-1.0.2.tar.gz pcre-8.36.tar.gz  zlib-1.2.5.tar.gz
+2、软件安装
+	#添加Nginx启动用户
+	groupadd www-data
+	useradd -s /sbin/nologin -g www-data www-data
+	cd /software/tmp/tengine2.1
+		./configure --prefix=/software/tengine --user=www-data --group=www-data --with-pcre=/software/tmp/pcre-8.36 --with-openssl=/software/tmp/openssl-1.0.2 --with-jemalloc=/software/tmp/jemalloc-3.6.0  --with-http_gzip_static_module --with-http_realip_module --with-http_stub_status_module --with-http_concat_module --with-zlib=/software/tmp/zlib-1.2.5
+注意配置的时候 –with-pcre 、–with-openssl、–with-jemalloc、–with-zlib的路径为源文件的路径
+3、配置Tengine，设置tengine自动启动
+		#!/bin/bash
+		# nginx Startup script for the Nginx HTTP Server
+		# it is v.0.0.2 version.
+		# chkconfig: - 85 15
+		# description: Nginx is a high-performance web and proxy server.
+		# It has a lot of features, but it's not for everyone.
+		# processname: nginx
+		# pidfile: /var/run/nginx.pid
+		# config: /usr/local/nginx/conf/nginx.conf
+		nginxd=/software/tengine/sbin/nginx
+		nginx_config=/software/tengine/conf/nginx.conf
+		nginx_pid=/software/tengine/logs/nginx.pid
+		RETVAL=0
+		prog="nginx"
+		# Source function library.
+		. /etc/rc.d/init.d/functions
+		# Source networking configuration.
+		. /etc/sysconfig/network
+		# Check that networking is up.
+		[ ${NETWORKING} = "no" ] && exit 0
+		[ -x $nginxd ] || exit 0
+		# Start nginx daemons functions.
+		start() {
+		if [ -e $nginx_pid ];then
+		echo "nginx already running...."
+		exit 1
+		fi
+		echo -n $"Starting $prog: "
+		daemon $nginxd -c ${nginx_config}
+		RETVAL=$?
+		echo
+		[ $RETVAL = 0 ] && touch /var/lock/subsys/nginx
+		return $RETVAL
+		}
+		# Stop nginx daemons functions.
+		stop() {
+		echo -n $"Stopping $prog: "
+		killproc $nginxd
+		RETVAL=$?
+		echo
+		[ $RETVAL = 0 ] && rm -f /var/lock/subsys/nginx /usr/local/nginx/logs/nginx.pid
+		}
+		reload() {
+		echo -n $"Reloading $prog: "
+		#kill -HUP `cat ${nginx_pid}`
+		killproc $nginxd -HUP
+		RETVAL=$?
+		echo
+		}
+		# See how we were called.
+		case "$1" in
+		start)
+		start
+		;;
+		stop)
+		stop
+		;;
+		reload)
+		reload
+		;;
+		restart)
+		stop
+		start
+		;;
+		status)
+		status $prog
+		RETVAL=$?
+		;;
+		*)
+		echo $"Usage: $prog {start|stop|restart|reload|status|help}"
+		exit 1
+		esac
+		exit $RETVAL
+chmod 775 /etc/rc.d/init.d/nginx #赋予文件执行权限
+chkconfig nginx on #设置开机启动
+service nginx restart #启动服务
