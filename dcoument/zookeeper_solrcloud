@@ -1,0 +1,69 @@
+1.软件包列表
+	apache-tomcat-7.0.53.tar.gz
+	solr-4.8.0.tgz
+	zookeeper-3.4.6.tar.gz
+2.服务器列表
+	10.90.6.28 master
+	10.90.6.29 slave
+	10.90.6.30 slave
+3.基础环境搭建
+	（1）安装jdk1.7
+	（2）配置/etc/hosts 每台服务器添加
+		solr-node1 solr-node2 solr-node2
+	zookeeper部署
+	Zookeeper 分布式服务框架是 Apache Hadoop 的一个子项目，它主要是用来解决分布式应用中经常遇到的一些数据管理问题，如：统一命名服务、状态同步服务、集群管理、分布式应用配置项的管理等。
+		1.进行统一的目录设定 软件包存放位置/software/tmp 下
+		2.建立zookeeper的数据，日志目录
+		mkdir -p /software/data/zookeeper-data
+		mkdir -p /software/data/zookeeper-data/logs
+		3.修改配置文件
+		cp /software/zookeeper-3.4.6/conf/zoo_sample.cfg ./zoo.cfg
+		更改dataDir、dataLogDir、server.1-3 DataLogDir如果没有进行添加
+		server.1=solr-node1:2888:3888
+		server.2=solr-node2:2888:3888
+		server.3=solr-node3:2888:3888
+		4.同步所有配置到solr2-solr3 创建myid文件添加标识码
+		scp /software/data/zookeeper-data solr-node2|3:/software/
+		scp /software/zookeeper solr-node2|3:/software/
+		5.启动zookeeper查看状态
+		/software/zkServer.sh start /software/zkCli.sh status
+	SolrCloud分布式集群搭建
+		1.tomcat目录为：/software/tomcat-solr
+		2.解压solr-4.8.0.tgz，并且把 solr-4.8.1/example/webapps/solr.war 解压至/software/tomcat-solr/webapps/
+		3.把 solr-4.8.0\example\lib\ext 下的 jar 包放到 solr\WEB-INF\lib 下
+		4.以10.90.6.28为例，创建目录
+			mkdir /software/solrcloud/config-files
+			mkdir /software/solrcloud/solr-lib
+		5.复制/software/tomcat-solr/webapps/solr/WEB-INF/lib 下的所有 jar 包拷贝到 /software/solrcloud/solr-lib 目录
+			cp /software/tomcat-solr/webapps/solr/WEB-INF/lib/* /software/solrcloud/solr-lib/
+		6.复制solr/example/solr/collection1/conf 下的所有文件拷贝到 /software/solrcloud/config-files/
+		7.创建 solr 的数据目录 /software/solrcloud/solr-cores 并在该目录下生成 solr.xml， 这是 solr 的核心配置文件
+			<?xml version="1.0" encoding="UTF-8" ?>  
+				<solr persistent="true">  
+				<logging enabled="true">  
+				<watcher size="100" threshold="INFO" />  
+				</logging>  
+				<cores defaultCoreName="collection1" adminPath="/admin/cores" host="${host:}" hostPort="8080" hostContext="${hostContext:solr}" zkClientTimeout="${zkClientTimeout:15000}">  
+				</solr>
+		8.创建存放solrhome的配置文件
+			mkdir -p /software/tomcat-solr/conf/Catalina/localhost
+			cat 	/software/tomcat-solr/conf/Catalina/localhost/solr.xml
+				<?xml version="1.0" encoding="UTF-8"?>  
+					<Context docBase="/software/tomcat-solr/webapps/solr" debug="0" crossContext="true">  
+					<Environment name="solr/home" type="java.lang.String" value="/software/solrcloud/solr-cores" override="true"/>  
+					</Context>
+		9.创建启动Solrcloud加入zookeeper集群
+			cat /software/tomcat-solr/bin/catalina.sh
+			JAVA_OPTS="-server -Xmx4096m -Xms1024m -verbose:gc -Xloggc:solr_gc.log -DzkHost=10.90.6.28:2181,10.90.6.29:2181,10.90.6.30:2181"
+		10.同步所有配置到solr-node2|3
+			scp -r /software/tomcat-solr solr-node2|3:/software/
+			scp -r solrcloud solr-node2|3:/software/
+		11.SolrCloud 是通过 ZooKeeper 集群来保证配置文件的变更及时同步到各个节点上，所以，需要将配置文件上传到 ZooKeeper 集群中
+			java -classpath .:/software/solrcloud/solr-lib/* org.apache.solr.cloud.ZkCLI -cmd upconfig -zkhost solr-node1:2181,solr-node2:2181,solr-node3:2181 -confdir /software/solrcloud/config-files/  -confname solrcloudconf(此处自定义文件名)
+		***目前的机制就是每次的配置文件更改都得上传一次配置文件
+		12.创建Collection及初始shared
+			curl 'http://localhost:8080/solr/admin/collections?action=CREATE&name=userinfo&numShards=3&replicationFactor=1'
+			curl 'http://localhost:8080/solr/admin/collections?action=CREATE&name=userinfo&numShards=3&replicationFactor=1'
+			curl 'http://localhost:8080/solr/admin/collections?action=CREATE&name=userinfo&numShards=3&replicationFactor=1'
+			（创建3个shared，机器分布在每个shared上，在每台机器上执行，每个shared存在3个节点）
+		13.基于Zookeeper的Solrcould集群搭建完毕
