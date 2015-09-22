@@ -120,11 +120,11 @@ remove_ptest () {
     fi
 }
 remove_target () {
-    #É¾³ımaven±àÒëºóÉú³ÉµÄtargetÎÄ¼ş¼Ğ
+    #É¾ï¿½ï¿½mavenï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½targetï¿½Ä¼ï¿½ï¿½ï¿½
     cd && find /install/carrefour-pro -name target > targetTmp.txt
     for line in `cat targetTmp.txt`
     do
-        echo "É¾³ıCarrefour-pro·ÖÖ§Éú³ÉµÄtargetÎÄ¼ş¼Ğ"
+        echo "É¾ï¿½ï¿½Carrefour-proï¿½ï¿½Ö§ï¿½ï¿½Éµï¿½targetï¿½Ä¼ï¿½ï¿½ï¿½"
         rm -rf $line
     done
 }
