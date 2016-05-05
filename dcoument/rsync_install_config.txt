@@ -128,7 +128,7 @@ rsync 服务器搭建
 		A.配置执行脚本
 			#!/bin/bash
 				#This rsync auto 
-				rsync -avzP  --delete  --password-file=/root/rsync.secrets  back(服务端用户)@10.90.10.200::backtest(服务端定义的模块)  /data/(本机路径) --password-file=/root/rsync.secrets(内容格式为书写服务端定义的用户的密码并且保障权限为600:password )
+				rsync -avzP  --delete  --password-file=/root/rsync.secrets(内容格式为书写服务端定义的用户的密码并且保障权限为600:password )  back(服务端用户)@10.90.10.200::backtest(服务端定义的模块)  /data/(本机路径) 
 		B.配置crond任务
 			*/1 * * * * /root/rsync.sh (每分钟执行一次)
 	#至此rsync配置完毕
